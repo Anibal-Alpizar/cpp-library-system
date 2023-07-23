@@ -40,7 +40,7 @@ void menuInventarioProductos()
             int codigoEliminar;
             cout << "Ingresa el código del producto a eliminar: ";
             cin >> codigoEliminar;
-            eliminarProductoPorCodigo(codigoEliminar);
+            (codigoEliminar);
             break;
         case 4:
             cout << "Haz presionado la opción 4: Volver al menú principal" << endl;
@@ -89,7 +89,7 @@ int main()
             break;
         case 5:
             cout << "Haz presionado la opción 5: Reporte Pedidos Pendientes" << endl;
-            mostrarReportePedidosPendientes();
+            generarReporteNoEnviados();
             break;
         case 6:
             cout << "Haz presionado la opción 6: Salir del Programa" << endl;

@@ -27,28 +27,6 @@ bool existeCodigoEnInventario(int codigo)
 }
 
 
-// Función para obtener el nombre del producto por su código
-string obtenerNombreProducto(int codigo)
-{
-    ifstream archivoProductos("Productos.txt");
-    int codigoLeido;
-    string nombre;
-    int cantidad;
-
-    while (archivoProductos >> codigoLeido >> nombre >> cantidad)
-    {
-        if (codigoLeido == codigo)
-        {
-            archivoProductos.close();
-            return nombre;
-        }
-    }
-
-    archivoProductos.close();
-    return "Producto no encontrado";
-}
-
-
 bool existeCodigoPedido(int codigo)
 {
     ifstream archivoPedidos("Pedidos.txt");
@@ -120,7 +98,8 @@ void generarPedido()
             cout << "El código del pedido ya existe. Ingresa un código diferente." << endl;
             codigoRepetido = true;
         }
-    } while (codigoRepetido);
+    }
+    while (codigoRepetido);
 
     cin.ignore(); // Limpiar el buffer después de leer el código del pedido
     cout << "Nombre del pedido: ";
@@ -156,18 +135,15 @@ void generarPedido()
         codigosProductos.push_back(codigoProducto);
         cantidadesProductos.push_back(cantidadProducto);
 
-        // Mostrar los productos que se van agregando al pedido (mostrar el nombre en lugar del ID)
-        cout << "Producto agregado al pedido: " << obtenerNombreProducto(codigoProducto) << ", Cantidad " << cantidadProducto << endl;
+// Mostrar si el pedido ha sido enviado o no
+        cout << "Pedido: " << codigoPedido << " " << nombrePedido << " pedido " << codigoProducto << " " << cantidadProducto << " N" << endl;
 
         cout << "¿Desea agregar otro producto al pedido? (S/N): ";
         cin >> continuar;
 
         continuar = toupper(continuar); // Convertir el carácter ingresado a mayúscula
-    } while (continuar == 'S');
-
-    // Aquí puedes agregar la lógica para confirmar el pedido y actualizar el inventario
-    // No implementaremos esto en detalle, pero debes verificar si el usuario confirma el pedido
-    // y luego actualizar la cantidad de productos en el inventario.
+    }
+    while (continuar == 'S');
 
     if (!codigosProductos.empty())
     {
@@ -180,10 +156,10 @@ void generarPedido()
 
             for (size_t i = 0; i < codigosProductos.size(); i++)
             {
-                archivoPedidos << " " << codigosProductos[i] << " - " << obtenerNombreProducto(codigosProductos[i]) << " " << cantidadesProductos[i];
+                archivoPedidos << " " << codigosProductos[i] << " " << cantidadesProductos[i] << " N";
             }
 
-            archivoPedidos << " N" << endl;
+            archivoPedidos << endl;
 
             archivoPedidos.close();
 
@@ -202,6 +178,7 @@ void generarPedido()
 
 
 
+
 // Función para verificar si un pedido existe y si aún no ha sido enviado
 bool verificarPedidoNoEnviado(int codigoPedido)
 {
@@ -217,19 +194,10 @@ bool verificarPedidoNoEnviado(int codigoPedido)
 
         if (codigoLeido == codigoPedido)
         {
-            char enviado;
-            // Leer cada producto separado por guiones
-            while (iss >> productosInfo)
-            {
-                size_t separador = productosInfo.find_last_of('-');
-                string estado = productosInfo.substr(separador + 1);
-                enviado = estado[0];
-            }
-
             archivoPedidos.close();
 
-            // Verificar si el pedido no ha sido enviado
-            if (enviado == 'N')
+            // Check if the order has been sent
+            if (productosInfo.back() == 'N')
             {
                 return true;
             }
@@ -245,6 +213,7 @@ bool verificarPedidoNoEnviado(int codigoPedido)
     cout << "El pedido con código " << codigoPedido << " no existe." << endl;
     return false;
 }
+
 
 // Función para cambiar el estado de envío de un pedido de 'N' a 'S'
 void marcarPedidoEnviado(int codigoPedido)
@@ -314,7 +283,5 @@ void enviarPedido()
         }
     }
 }
-
-
 
 

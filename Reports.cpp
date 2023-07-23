@@ -2,6 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip> // Agregar la biblioteca iomanip para usar setw()
+#include <sstream>
+#include <regex>
+
 using namespace std;
 
 
@@ -71,35 +74,39 @@ void mostrarReporteInventario()
 }
 
 
-
-
-void mostrarReportePedidosPendientes()
+// Function to generate a report of products that have not been sent (status 'N')
+void generarReporteNoEnviados()
 {
     ifstream archivoPedidos("Pedidos.txt");
+    string linea;
 
-    if (!archivoPedidos.is_open())
+    cout << "Reporte de Productos No Enviados:" << endl;
+    cout << left << setw(15) << "Pedido" << setw(20) << "Nombre" << setw(10) << "Código" << setw(10) << "Cantidad" << "Enviado" << endl;
+    cout << setfill('-') << setw(67) << "-" << setfill(' ') << endl;
+
+    bool foundNoEnviados = false;
+    regex regexPattern("^(\\d+) (\\S+) pedido (\\d+) (\\d+) (N)$");
+
+    while (getline(archivoPedidos, linea))
     {
-        cout << "Error al abrir el archivo de pedidos." << endl;
-        return;
-    }
-
-    cout << "Reporte de Pedidos Pendientes de Envío" << endl;
-    cout << setw(15) << "Código pedido" << setw(30) << "Nombre Pedido" << setw(20) << "Codigo Producto" << setw(15) << "Cantidad" << setw(15) << "Enviado (S/N)" << endl;
-
-    int codigoPedido, codigoProducto, cantidad;
-    char enviado;
-    string nombrePedido, palabra;
-
-    while (archivoPedidos >> codigoPedido >> nombrePedido)
-    {
-        archivoPedidos >> palabra; // Leer "pedido" o cualquier otra palabra no necesaria para el reporte
-        archivoPedidos >> codigoProducto >> nombrePedido >> cantidad >> enviado;
-
-        if (enviado == 'N')
+        smatch matches;
+        if (regex_search(linea, matches, regexPattern))
         {
-            cout << setw(15) << codigoPedido << setw(30) << nombrePedido << setw(20) << codigoProducto << setw(15) << cantidad << setw(15) << enviado << endl;
+            int codigoLeido = stoi(matches[1]);
+            string nombrePedido = matches[2];
+            int codigoProducto = stoi(matches[3]);
+            int cantidadProducto = stoi(matches[4]);
+            char enviado = matches[5].str()[0];
+
+            foundNoEnviados = true;
+            cout << left << setw(15) << codigoLeido << setw(20) << nombrePedido << setw(10) << codigoProducto << setw(10) << cantidadProducto << enviado << endl;
         }
     }
 
     archivoPedidos.close();
+
+    if (!foundNoEnviados)
+    {
+        cout << "No se encontraron productos no enviados." << endl;
+    }
 }

@@ -1,23 +1,25 @@
 # depslib dependency file v1.0
-1690077128 source:c:\users\anibal\desktop\cpp-library-system\main.cpp
+1690083350 source:c:\users\anibal\desktop\cpp-library-system\main.cpp
 	<iostream>
 	"Products.cpp"
 	"Orders.cpp"
 	"reports.cpp"
 
-1690059778 c:\users\anibal\desktop\cpp-library-system\products.cpp
+1690082285 c:\users\anibal\desktop\cpp-library-system\products.cpp
 	<iostream>
 	<fstream>
 	<sstream>
 
-1690076792 c:\users\anibal\desktop\cpp-library-system\orders.cpp
+1690083320 c:\users\anibal\desktop\cpp-library-system\orders.cpp
 	<iostream>
 	<fstream>
 	<sstream>
 	<vector>
 
-1690077389 c:\users\anibal\desktop\cpp-library-system\reports.cpp
+1690083749 c:\users\anibal\desktop\cpp-library-system\reports.cpp
 	<iostream>
 	<fstream>
 	<iomanip>
+	<sstream>
+	<regex>
 
