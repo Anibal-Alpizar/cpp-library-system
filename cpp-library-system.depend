@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1690077128 source:c:\users\anibal\desktop\cpp-library-system\main.cpp
+	<iostream>
+	"Products.cpp"
+	"Orders.cpp"
+	"reports.cpp"
+
+1690059778 c:\users\anibal\desktop\cpp-library-system\products.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+
+1690076792 c:\users\anibal\desktop\cpp-library-system\orders.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<vector>
+
+1690077389 c:\users\anibal\desktop\cpp-library-system\reports.cpp
+	<iostream>
+	<fstream>
+	<iomanip>
+
