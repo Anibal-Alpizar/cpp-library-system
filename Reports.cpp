@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iomanip> // Agregar la biblioteca iomanip para usar setw()
 #include <sstream>
-#include <regex>
 
 using namespace std;
 
@@ -74,32 +73,33 @@ void mostrarReporteInventario()
 }
 
 
-// Function to generate a report of products that have not been sent (status 'N')
 void generarReporteNoEnviados()
 {
     ifstream archivoPedidos("Pedidos.txt");
     string linea;
 
     cout << "Reporte de Productos No Enviados:" << endl;
-    cout << left << setw(15) << "Pedido" << setw(20) << "Nombre" << setw(10) << "Código" << setw(10) << "Cantidad" << "Enviado" << endl;
-    cout << setfill('-') << setw(67) << "-" << setfill(' ') << endl;
+    cout << left << setw(15) << "Código pedido" << setw(20) << "Nombre Pedido" << setw(15) << "Código Producto" << setw(10) << "Cantidad" << setw(15) << "Enviado (S/N)" << endl;
+    cout << setfill('-') << setw(75) << "-" << setfill(' ') << endl;
 
     bool foundNoEnviados = false;
-    regex regexPattern("^(\\d+) (\\S+) pedido (\\d+) (\\d+) (N)$");
 
     while (getline(archivoPedidos, linea))
     {
-        smatch matches;
-        if (regex_search(linea, matches, regexPattern))
+        char enviado = linea.back(); // Get the last character of the line
+
+        if (enviado == 'N')
         {
-            int codigoLeido = stoi(matches[1]);
-            string nombrePedido = matches[2];
-            int codigoProducto = stoi(matches[3]);
-            int cantidadProducto = stoi(matches[4]);
-            char enviado = matches[5].str()[0];
+            // Remove the last character 'N' before processing the rest of the line
+            linea.pop_back();
+
+            istringstream iss(linea);
+            int codigoPedido, codigoProducto, cantidadProducto;
+            string nombrePedido;
+            iss >> codigoPedido >> nombrePedido >> codigoProducto >> cantidadProducto;
 
             foundNoEnviados = true;
-            cout << left << setw(15) << codigoLeido << setw(20) << nombrePedido << setw(10) << codigoProducto << setw(10) << cantidadProducto << enviado << endl;
+            cout << left << setw(15) << codigoPedido << setw(20) << nombrePedido << setw(15) << codigoProducto << setw(10) << cantidadProducto << setw(15) << enviado << endl;
         }
     }
 
@@ -110,3 +110,4 @@ void generarReporteNoEnviados()
         cout << "No se encontraron productos no enviados." << endl;
     }
 }
+

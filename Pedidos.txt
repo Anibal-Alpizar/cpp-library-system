@@ -1,3 +1,0 @@
-1 anibal  pedido 1234 1 S
-2 daniel  pedido 1234 1 S
-3 roxana  pedido 1234 2 S
