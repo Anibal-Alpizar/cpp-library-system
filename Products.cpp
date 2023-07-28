@@ -74,24 +74,23 @@ void ingresarProducto()
 }
 
 
-// Función para consultar un producto por su código
 void consultarProductoPorCodigo(int codigo)
 {
     ifstream archivoProductos("Productos.txt"); // Abre el archivo "Productos.txt" en modo de lectura
     int codigoLeido; // Variable para almacenar el código leído desde el archivo
-    string nombre; // Variable para almacenar el nombre leído desde el archivo
-    int cantidad; // Variable para almacenar la cantidad disponible leída desde el archivo
+    string nombreProducto; // Variable para almacenar el nombre junto con la cantidad leídos desde el archivo
     bool encontrado = false; // Variable para indicar si se ha encontrado el producto con el código dado
-    char continuar; // Variable para almacenar la respuesta del usuario para continuar consultando
 
-    while (archivoProductos >> codigoLeido >> nombre >> cantidad) // Lee cada registro del archivo y almacena los valores en las variables correspondientes
+    while (archivoProductos >> codigoLeido) // Lee el código del producto desde el archivo
     {
+        archivoProductos.ignore(); // Ignorar el espacio después del código
+        getline(archivoProductos, nombreProducto); // Leer el resto de la línea como el nombre del producto junto con la cantidad
+
         if (codigoLeido == codigo) // Compara el código leído con el código proporcionado como argumento
         {
             encontrado = true; // Marca como encontrado si el código coincide
             cout << "Código: " << codigoLeido << endl;
-            cout << "Nombre: " << nombre << endl;
-            cout << "Cantidad disponible: " << cantidad << endl;
+            cout << "Nombre y cantidad: " << nombreProducto << endl;
             break; // Sale del ciclo si se encuentra el producto con el código dado
         }
     }
@@ -101,34 +100,12 @@ void consultarProductoPorCodigo(int codigo)
     if (!encontrado) // Si no se encontró el producto con el código dado
     {
         cout << "El producto con código " << codigo << " no existe." << endl;
-
-        do
-        {
-            cout << "Desea continuar consultando? (S/N): ";
-            cin >> continuar;
-
-            continuar = toupper(continuar); // Convertir el carácter ingresado a mayúscula
-
-            if (continuar != 'S' && continuar != 'N') // Verifica si la opción ingresada es válida (S o N)
-            {
-                cout << "Opción no válida. Inténtelo nuevamente." << endl;
-            }
-        }
-        while (continuar != 'S' && continuar != 'N');
-
-        if (continuar == 'N') // Si el usuario no desea continuar consultando
-        {
-            return; // Sale de la función y vuelve al menú principal
-        }
-        else if (continuar == 'S') // Si el usuario desea continuar consultando
-        {
-            int nuevoCodigo;
-            cout << "Ingresa el código del producto a consultar: ";
-            cin >> nuevoCodigo;
-            consultarProductoPorCodigo(nuevoCodigo); // Llama a la función nuevamente para continuar la consulta
-        }
     }
 }
+
+
+
+
 
 // Función para eliminar un producto por su código
 void eliminarProductoPorCodigo(int codigo)
@@ -182,6 +159,3 @@ void eliminarProductoPorCodigo(int codigo)
     remove("Productos.txt"); // Elimina el archivo original "Productos.txt"
     rename("Temporal.txt", "Productos.txt"); // Renombra el archivo temporal como "Productos.txt"
 }
-
-
-
