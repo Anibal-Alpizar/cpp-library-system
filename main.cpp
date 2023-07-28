@@ -40,7 +40,7 @@ void menuInventarioProductos()
             int codigoEliminar;
             cout << "Ingresa el código del producto a eliminar: ";
             cin >> codigoEliminar;
-            (codigoEliminar);
+            eliminarProductoPorCodigo(codigoEliminar);
             break;
         case 4:
             cout << "Haz presionado la opción 4: Volver al menú principal" << endl;

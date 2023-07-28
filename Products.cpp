@@ -73,7 +73,6 @@ void ingresarProducto()
     }
 }
 
-
 void consultarProductoPorCodigo(int codigo)
 {
     ifstream archivoProductos("Productos.txt"); // Abre el archivo "Productos.txt" en modo de lectura
@@ -104,58 +103,42 @@ void consultarProductoPorCodigo(int codigo)
 }
 
 
-
-
-
 // Función para eliminar un producto por su código
-void eliminarProductoPorCodigo(int codigo)
+void eliminarProductoPorCodigo(int id)
 {
-    ifstream archivoProductos("Productos.txt"); // Abre el archivo "Productos.txt" en modo de lectura
-    ofstream temporal("Temporal.txt"); // Crea un archivo temporal "Temporal.txt" en modo de escritura
+     std::ifstream archivoProductos("Productos.txt"); // Abre el archivo "Productos.txt" en modo de lectura
+    std::ofstream archivoNuevo("Productos_nuevo.txt"); // Crea un nuevo archivo "Productos_nuevo.txt"
 
-    int codigoLeido; // Variable para almacenar el código leído desde el archivo
-    string nombre; // Variable para almacenar el nombre leído desde el archivo
-    int cantidad; // Variable para almacenar la cantidad disponible leída desde el archivo
-    bool encontrado = false; // Variable para indicar si se ha encontrado el producto con el código dado
-    char confirmarEliminar; // Variable para almacenar la respuesta del usuario para confirmar la eliminación
+    std::string linea; // Variable para almacenar cada línea leída desde el archivo
+    bool encontrado = false; // Variable para indicar si se ha encontrado el producto con el ID dado
 
-    while (archivoProductos >> codigoLeido >> nombre >> cantidad) // Lee cada registro del archivo y almacena los valores en las variables correspondientes
-    {
-        if (codigoLeido == codigo) // Compara el código leído con el código proporcionado como argumento
-        {
-            encontrado = true; // Marca como encontrado si el código coincide
-            cout << "Código: " << codigoLeido << endl;
-            cout << "Nombre: " << nombre << endl;
-            cout << "Cantidad disponible: " << cantidad << endl;
+    while (getline(archivoProductos, linea)) { // Lee cada línea del archivo "Productos.txt"
+        std::istringstream iss(linea); // Convierte la línea leída en un objeto istringstream para leer cada dato separado por espacios
+        int codigoLeido; // Variable para almacenar el código del producto
+        std::string nombreProducto; // Variable para almacenar el nombre del producto
+        int cantidad; // Variable para almacenar la cantidad del producto
 
-            cout << "¿Está seguro de eliminar este producto? (S/N): ";
-            cin >> confirmarEliminar;
-            confirmarEliminar = toupper(confirmarEliminar); // Convierte el carácter ingresado a mayúscula
+        iss >> codigoLeido >> nombreProducto >> cantidad; // Lee los datos del producto desde la línea
 
-            if (confirmarEliminar == 'S') // Si el usuario confirma la eliminación
-            {
-                cout << "Producto eliminado exitosamente." << endl;
-                continue; // Omitir el registro actual y pasar al siguiente
-            }
-            else if (confirmarEliminar == 'N') // Si el usuario no confirma la eliminación
-            {
-                temporal << codigoLeido << " " << nombre << " " << cantidad << endl; // Escribe el registro en el archivo temporal
-            }
+        if (codigoLeido != id) { // Si el código del producto no es igual al ID proporcionado
+            archivoNuevo << linea << std::endl; // Escribe la línea en el archivo "Productos_nuevo.txt"
         }
-        else
-        {
-            temporal << codigoLeido << " " << nombre << " " << cantidad << endl; // Escribe el registro en el archivo temporal (si no coincide con el código dado)
+        else {
+            encontrado = true; // Marca como encontrado si el ID coincide con el producto a eliminar
         }
     }
 
-    archivoProductos.close(); // Cierra el archivo después de leerlo
-    temporal.close(); // Cierra el archivo temporal después de escribir en él
+    archivoProductos.close(); // Cierra el archivo "Productos.txt"
+    archivoNuevo.close(); // Cierra el archivo "Productos_nuevo.txt"
 
-    if (!encontrado) // Si no se encontró el producto con el código dado
-    {
-        cout << "El producto con código " << codigo << " no existe." << endl;
+    if (encontrado) {
+        // Renombra el archivo "Productos_nuevo.txt" a "Productos.txt"
+        std::remove("Productos.txt");
+        std::rename("Productos_nuevo.txt", "Productos.txt");
+
+        std::cout << "El producto con el ID " << id << " ha sido eliminado." << std::endl;
     }
-
-    remove("Productos.txt"); // Elimina el archivo original "Productos.txt"
-    rename("Temporal.txt", "Productos.txt"); // Renombra el archivo temporal como "Productos.txt"
+    else {
+        std::cout << "El producto con el ID " << id << " no existe." << std::endl;
+    }
 }
